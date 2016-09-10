@@ -1,6 +1,6 @@
 # URL
 
-    Stability: 2 - Stable
+> Stability: 2 - Stable
 
 The `url` module provides utilities for URL resolution and parsing. It can be
 accessed using:
@@ -19,7 +19,7 @@ The following details each of the components of a parsed URL. The example
 `'http://user:pass@host.com:8080/p/a/t/h?query=string#hash'` is used to
 illustrate each.
 
-```
+```txt
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                    href                                     │
 ├──────────┬┬───────────┬─────────────────┬───────────────────────────┬───────┤
@@ -64,7 +64,7 @@ For example: `'host.com:8080'`
 
 The `auth` property is the username and password portion of the URL, also
 referred to as "userinfo". This string subset follows the `protocol` and
-double slashes (if present) and preceeds the `host` component, delimited by an
+double slashes (if present) and precedes the `host` component, delimited by an
 ASCII "at sign" (`@`). The format of the string is `{username}[:{password}]`,
 with the `[:{password}]` portion being optional.
 
@@ -208,7 +208,7 @@ added: v0.1.25
   method. If `false`, the `query` property on the returned URL object will be an
   unparsed, undecoded string. Defaults to `false`.
 * `slashesDenoteHost` {boolean} If `true`, the first token after the literal
-  string `//` and preceeding the next `/` will be interpreted as the `host`.
+  string `//` and preceding the next `/` will be interpreted as the `host`.
   For instance, given `//foo/bar`, the result would be
   `{host: 'foo', pathname: '/bar'}` rather than `{pathname: '//foo/bar'}`.
   Defaults to `false`.
@@ -241,7 +241,7 @@ URLs are only permitted to contain a certain range of characters. Spaces (`' '`)
 and the following characters will be automatically escaped in the
 properties of URL objects:
 
-```
+```txt
 < > " ` \r \n \t { } | \ ^ '
 ```
 

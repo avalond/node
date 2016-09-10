@@ -1,6 +1,6 @@
 # Readline
 
-    Stability: 2 - Stable
+> Stability: 2 - Stable
 
 The `readline` module provides an interface for reading data from a [Readable][]
 stream (such as [`process.stdin`]) one line at a time. It can be accessed using:
@@ -315,6 +315,9 @@ rl.write('Delete this!');
 rl.write(null, {ctrl: true, name: 'u'});
 ```
 
+*Note*: The `rl.write()` method will write the data to the `readline`
+Interface's `input` *as if it were provided by the user*.
+
 ## readline.clearLine(stream, dir)
 <!-- YAML
 added: v0.7.7
@@ -358,6 +361,10 @@ added: v0.1.98
     only if `terminal` is set to `true` by the user or by an internal `output`
     check, otherwise the history caching mechanism is not initialized at all.
   * `prompt` - the prompt string to use. Default: `'> '`
+  * `crlfDelay` {number} If the delay between `\r` and `\n` exceeds
+    `crlfDelay` milliseconds, both `\r` and `\n` will be treated as separate
+    end-of-line input. Default to `100` milliseconds.
+    `crlfDelay` will be coerced to `[100, 2000]` range.
 
 The `readline.createInterface()` method creates a new `readline.Interface`
 instance.
@@ -398,10 +405,10 @@ For instance: `[[substr1, substr2, ...], originalsubstring]`.
 
 ```js
 function completer(line) {
-  var completions = '.help .error .exit .quit .q'.split(' ')
-  var hits = completions.filter((c) => { return c.indexOf(line) == 0 })
+  var completions = '.help .error .exit .quit .q'.split(' ');
+  var hits = completions.filter((c) => { return c.indexOf(line) == 0 });
   // show all completions if none found
-  return [hits.length ? hits : completions, line]
+  return [hits.length ? hits : completions, line];
 }
 ```
 

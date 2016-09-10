@@ -11,13 +11,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __APPLE__
+// OSX 10.9 defaults to libc++ which provides a C++11 <type_traits> header.
+#if defined(__APPLE__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1090
+#define USE_TR1_TYPE_TRAITS
+#endif
+
+#ifdef USE_TR1_TYPE_TRAITS
 #include <tr1/type_traits>  // NOLINT(build/c++tr1)
 #else
 #include <type_traits>  // std::remove_reference
 #endif
 
 namespace node {
+
+// These should be used in our code as opposed to the native
+// versions as they abstract out some platform and or
+// compiler version specific functionality
+// malloc(0) and realloc(ptr, 0) have implementation-defined behavior in
+// that the standard allows them to either return a unique pointer or a
+// nullptr for zero-sized allocation requests.  Normalize by always using
+// a nullptr.
+inline void* Realloc(void* pointer, size_t size);
+inline void* Malloc(size_t size);
+inline void* Calloc(size_t n, size_t size);
 
 #ifdef __GNUC__
 #define NO_RETURN __attribute__((noreturn))
@@ -31,7 +47,7 @@ NO_RETURN void Abort();
 NO_RETURN void Assert(const char* const (*args)[4]);
 void DumpBacktrace(FILE* fp);
 
-#ifdef __APPLE__
+#ifdef USE_TR1_TYPE_TRAITS
 template <typename T> using remove_reference = std::tr1::remove_reference<T>;
 #else
 template <typename T> using remove_reference = std::remove_reference<T>;
@@ -295,7 +311,7 @@ class MaybeStackBuffer {
       // Guard against overflow.
       CHECK_LE(storage, sizeof(T) * storage);
 
-      buf_ = static_cast<T*>(malloc(sizeof(T) * storage));
+      buf_ = static_cast<T*>(Malloc(sizeof(T) * storage));
       CHECK_NE(buf_, nullptr);
     }
 
